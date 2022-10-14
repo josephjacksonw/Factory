@@ -16,9 +16,9 @@ namespace Factory.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
+    public ActionResult Index() // XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXHEY THIS SORTS THE STUFF BY DUE DATE, WE CAN KEEP THE SORTER BUT WE DON'T HAVE DUE DATE
     {
-      return View(_db.Machines.ToList().OrderBy(model => model.DueDate).ToList());
+      return View(_db.Machines.ToList());
     }
 
     public ActionResult Create()

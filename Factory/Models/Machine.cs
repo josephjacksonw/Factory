@@ -13,8 +13,6 @@ namespace Factory.Models
 
         public int MachineId { get; set; }
         public string Description { get; set; }
-        public bool Complete { get; set; }
-        public DateTime DueDate { get; set; }
 
         public virtual ICollection<EngineerMachine> JoinEntities { get;}
     }
