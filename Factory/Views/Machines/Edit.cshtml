@@ -2,7 +2,7 @@
   Layout = "_Layout";
 }
 
-@model ToDoList.Models.Item
+@model Factory.Models.Machine
 
 <h2>Edit</h2>
 
@@ -10,7 +10,7 @@
 
 @using (Html.BeginForm())
 {
-    @Html.HiddenFor(model => model.ItemId)
+    @Html.HiddenFor(model => model.MachineId)
 
     @Html.LabelFor(model => model.Description)
     @Html.EditorFor(model => model.Description)

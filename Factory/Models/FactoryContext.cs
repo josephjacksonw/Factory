@@ -1,14 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace ToDoList.Models
+namespace Factory.Models
 {
-  public class ToDoListContext : DbContext
+  public class FactoryContext : DbContext
   {
-    public DbSet<Category> Categories { get; set; }
-    public DbSet<Item> Items { get; set; }
-    public DbSet<CategoryItem> CategoryItem { get; set; }
+    public DbSet<Engineer> Engineers { get; set; }
+    public DbSet<Machine> Machines { get; set; }
+    public DbSet<EngineerMachine> EngineerMachine { get; set; }
 
-    public ToDoListContext(DbContextOptions options) : base(options) { }
+    public FactoryContext(DbContextOptions options) : base(options) { }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

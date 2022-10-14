@@ -2,20 +2,20 @@ using System.Collections.Generic;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ToDoList.Models
+namespace Factory.Models
 {
-    public class Item
+    public class Machine
     {
-        public Item()
+        public Machine()
         {
-            this.JoinEntities = new HashSet<CategoryItem>();
+            this.JoinEntities = new HashSet<EngineerMachine>();
         }
 
-        public int ItemId { get; set; }
+        public int MachineId { get; set; }
         public string Description { get; set; }
         public bool Complete { get; set; }
         public DateTime DueDate { get; set; }
 
-        public virtual ICollection<CategoryItem> JoinEntities { get;}
+        public virtual ICollection<EngineerMachine> JoinEntities { get;}
     }
 }

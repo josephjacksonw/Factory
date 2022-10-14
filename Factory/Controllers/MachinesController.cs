@@ -1,40 +1,40 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using Factory.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ToDoList.Controllers
+namespace Factory.Controllers
 {
-  public class ItemsController : Controller
+  public class MachinesController : Controller
   {
-    private readonly ToDoListContext _db;
+    private readonly FactoryContext _db;
 
-    public ItemsController(ToDoListContext db)
+    public MachinesController(FactoryContext db)
     {
       _db = db;
     }
 
     public ActionResult Index()
     {
-      return View(_db.Items.ToList().OrderBy(model => model.DueDate).ToList());
+      return View(_db.Machines.ToList().OrderBy(model => model.DueDate).ToList());
     }
 
     public ActionResult Create()
     {
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+      ViewBag.EngineerId = new SelectList(_db.Engineers, "EngineerId", "Name");
       return View();
     }
 
     [HttpPost]
-    public ActionResult Create(Item item, int CategoryId)
+    public ActionResult Create(Machine machine, int EngineerId)
     {
-        _db.Items.Add(item);
+        _db.Machines.Add(machine);
         _db.SaveChanges();
-        if (CategoryId != 0)
+        if (EngineerId != 0)
         {
-            _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+            _db.EngineerMachine.Add(new EngineerMachine() { EngineerId = EngineerId, MachineId = machine.MachineId });
             _db.SaveChanges();
         }
         return RedirectToAction("Index");
@@ -42,58 +42,58 @@ namespace ToDoList.Controllers
 
     public ActionResult Details(int id)
     {
-      var thisItem = _db.Items
-        .Include(item => item.JoinEntities)
-        .ThenInclude(join => join.Category)
-        .FirstOrDefault(item => item.ItemId == id);
-      return View(thisItem);
+      var thisMachine = _db.Machines
+        .Include(machine => machine.JoinEntities)
+        .ThenInclude(join => join.Engineer)
+        .FirstOrDefault(machine => machine.MachineId == id);
+      return View(thisMachine);
     }
 
     public ActionResult Edit(int id)
     {
-        var thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-        ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-        return View(thisItem);
+        var thisMachine = _db.Machines.FirstOrDefault(machine => machine.MachineId == id);
+        ViewBag.EngineerId = new SelectList(_db.Engineers, "EngineerId", "Name");
+        return View(thisMachine);
     }
 
     [HttpPost]
-    public ActionResult Edit(Item item/*, int CategoryId*/)
+    public ActionResult Edit(Machine machine/*, int EngineerId*/)
     {
-        // if (CategoryId == 0)//this fix (previously !=), prevents it from making multiple copies of items but we can no longer change the category of the item
+        // if (EngineerId == 0)//this fix (previously !=), prevents it from making multiple copies of machines but we can no longer change the engineer of the machine
         // {
-        //   _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+        //   _db.EngineerMachine.Add(new EngineerMachine() { EngineerId = EngineerId, MachineId = machine.MachineId });
         // }
         // 
         /*
-        if (CategoryId != 0)
+        if (EngineerId != 0)
         {
-          _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+          _db.EngineerMachine.Add(new EngineerMachine() { EngineerId = EngineerId, MachineId = machine.MachineId });
         } */ // this is the previous version that had the make multiple copies bug
-        _db.Entry(item).State = EntityState.Modified;
+        _db.Entry(machine).State = EntityState.Modified;
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
 
-    public ActionResult AddCategory(int id)
+    public ActionResult AddEngineer(int id)
     {
-        var thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-        ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-        return View(thisItem);
+        var thisMachine = _db.Machines.FirstOrDefault(machine => machine.MachineId == id);
+        ViewBag.EngineerId = new SelectList(_db.Engineers, "EngineerId", "Name");
+        return View(thisMachine);
     }
 
     [HttpPost]
-    public ActionResult AddCategory(Item item, int CategoryId)
+    public ActionResult AddEngineer(Machine machine, int EngineerId)
     {
-        foreach(CategoryItem entry in _db.CategoryItem)
+        foreach(EngineerMachine entry in _db.EngineerMachine)
         {
-          if(item.ItemId == entry.ItemId && CategoryId == entry.CategoryId)
+          if(machine.MachineId == entry.MachineId && EngineerId == entry.EngineerId)
           {
             return RedirectToAction("Index");
           }
         }
-        if (CategoryId != 0) 
+        if (EngineerId != 0) 
         {
-          _db.CategoryItem.Add(new CategoryItem() { CategoryId = CategoryId, ItemId = item.ItemId });
+          _db.EngineerMachine.Add(new EngineerMachine() { EngineerId = EngineerId, MachineId = machine.MachineId });
           _db.SaveChanges();
         }
         return RedirectToAction("Index");
@@ -101,24 +101,24 @@ namespace ToDoList.Controllers
 
     public ActionResult Delete(int id)
     {
-        var thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-        return View(thisItem);
+        var thisMachine = _db.Machines.FirstOrDefault(machine => machine.MachineId == id);
+        return View(thisMachine);
     }
 
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
-        var thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-        _db.Items.Remove(thisItem);
+        var thisMachine = _db.Machines.FirstOrDefault(machine => machine.MachineId == id);
+        _db.Machines.Remove(thisMachine);
         _db.SaveChanges();
         return RedirectToAction("Index");
     }
 
     [HttpPost]
-    public ActionResult DeleteCategory(int joinId)
+    public ActionResult DeleteEngineer(int joinId)
     {
-        var joinEntry = _db.CategoryItem.FirstOrDefault(entry => entry.CategoryItemId == joinId);
-        _db.CategoryItem.Remove(joinEntry);
+        var joinEntry = _db.EngineerMachine.FirstOrDefault(entry => entry.EngineerMachineId == joinId);
+        _db.EngineerMachine.Remove(joinEntry);
         _db.SaveChanges();
         return RedirectToAction("Index");
     }

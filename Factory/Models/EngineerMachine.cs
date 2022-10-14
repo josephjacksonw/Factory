@@ -1,11 +1,11 @@
-namespace ToDoList.Models
+namespace Factory.Models
 {
-  public class CategoryItem
+  public class EngineerMachine
     {       
-        public int CategoryItemId { get; set; }
-        public int ItemId { get; set; }
-        public int CategoryId { get; set; }
-        public virtual Item Item { get; set; }
-        public virtual Category Category { get; set; }
+        public int EngineerMachineId { get; set; }
+        public int MachineId { get; set; }
+        public int EngineerId { get; set; }
+        public virtual Machine Machine { get; set; }
+        public virtual Engineer Engineer { get; set; }
     }
 }
